@@ -5,7 +5,7 @@ export function createCard (imgSource, imgName, removeCard, likeCard, openCard) 
     const cardImage = cardElement.querySelector('.card__image');
 
     cardImage.src = imgSource;
-    cardImage.alt = imgSource;
+    cardImage.alt = imgName;
     cardElement.querySelector('.card__title').textContent = imgName;
     deleteButton.addEventListener('click', () => removeCard(cardElement));
     likeButton.addEventListener('click', () => likeCard(likeButton));
