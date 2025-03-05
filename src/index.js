@@ -1,7 +1,7 @@
 import { initialCards } from './scripts/cards.js';
 import { openPopup, closePopup, closePopupByEsc, setListeners } from './components/modal.js';
 import { createCard, deleteCard, likeCard } from './components/card.js';
-import { enableValidation, clearValidation, config } from './components/validation.js';
+import { enableValidation, clearValidation, disableSubmitButton, config } from './components/validation.js';
 import './pages/index.css';
 
 const cardList = document.querySelector('.places__list');
@@ -26,7 +26,7 @@ function addUserCard(evt) {
     evt.preventDefault();
     cardList.prepend(createCard(placeLink.value, placeName.value, deleteCard, likeCard, openCard));
     placeForm.reset();
-    clearValidation(profileForm, config);
+    clearValidation(placeForm, config);
     closePopup(popupTypeNewCard);
 }
 

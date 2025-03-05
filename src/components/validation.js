@@ -7,17 +7,17 @@ export const config = {
   errorClass: 'popup__error_visible'
 }
 
-const showInputError = (formElement, inputElement, errorMessage, {inputErrorClass, errorClass, ...otherSettings}) => {
+const showInputError = (formElement, inputElement, errorMessage, config) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-  inputElement.classList.add(`${inputErrorClass}`);
+  inputElement.classList.add(`${config.inputErrorClass}`);
   errorElement.textContent = errorMessage;
-  errorElement.classList.add(`${errorClass}`);
+  errorElement.classList.add(`${config.errorClass}`);
 }
 
-const hideInputError = (formElement, inputElement, {inputErrorClass, errorClass, ...otherSettings}) => {
+const hideInputError = (formElement, inputElement, config) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-  inputElement.classList.remove(`${inputErrorClass}`);
-  errorElement.classList.remove(`${errorClass}`);
+  inputElement.classList.remove(`${config.inputErrorClass}`);
+  errorElement.classList.remove(`${config.errorClass}`);
   errorElement.textContent = '';
 }
 
@@ -41,27 +41,27 @@ const hasInvalidInput = (inputList) => {
   })
 }
 
-export const disableSubmitButton = (buttonElement, {inactiveButtonClass, ...otherSettings}) => {
-  buttonElement.classList.add(`${inactiveButtonClass}`);
+export const disableSubmitButton = (buttonElement, config) => {
+  buttonElement.classList.add(`${config.inactiveButtonClass}`);
   buttonElement.setAttribute('disabled', 'true');
 }
 
-const enableSubmitButton = (buttonElement, {inactiveButtonClass, ...otherSettings}) => {
-  buttonElement.classList.remove(`${inactiveButtonClass}`);
+const enableSubmitButton = (buttonElement, config) => {
+  buttonElement.classList.remove(`${config.inactiveButtonClass}`);
   buttonElement.removeAttribute('disabled');
 }
 
-const toggleButtonState = (inputList, buttonElement, {inactiveButtonClass, ...otherSettings}) => {
+const toggleButtonState = (inputList, buttonElement, config) => {
   if (hasInvalidInput(inputList)) {
-    disableSubmitButton(buttonElement, {inactiveButtonClass, ...otherSettings});
+    disableSubmitButton(buttonElement, config);
   } else {
-    enableSubmitButton(buttonElement, {inactiveButtonClass, ...otherSettings});
+    enableSubmitButton(buttonElement, config);
   }
 }
 
-const setEventListeners = (formElement, {inputSelector, submitButtonSelector, ...otherSettings}) => {
-  const inputList = Array.from(formElement.querySelectorAll(`${inputSelector}`));
-  const buttonElement = formElement.querySelector(`${submitButtonSelector}`);
+const setEventListeners = (formElement, config) => {
+  const inputList = Array.from(formElement.querySelectorAll(`${config.inputSelector}`));
+  const buttonElement = formElement.querySelector(`${config.submitButtonSelector}`);
   toggleButtonState(inputList, buttonElement, config);
   inputList.forEach((inputElement) => {
     inputElement.addEventListener('input', () => {
@@ -71,9 +71,9 @@ const setEventListeners = (formElement, {inputSelector, submitButtonSelector, ..
   })
 }
 
-export const enableValidation = ({ formSelector, ...otherSettings }) => {
+export const enableValidation = (config) => {
   // 1. Найти все формы по селектору config.formSelector
-  const formList = Array.from(document.querySelectorAll(`${formSelector}`));
+  const formList = Array.from(document.querySelectorAll(`${config.formSelector}`));
   // 2. Перебрать найденные формы
   formList.forEach((formElement) => {
     formElement.addEventListener('submit', (evt) => {
