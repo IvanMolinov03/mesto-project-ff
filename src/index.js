@@ -1,6 +1,7 @@
 import { initialCards } from './scripts/cards.js';
-import { openPopup, closePopup, closePopupByEsc, addListener } from './components/modal.js';
+import { openPopup, closePopup, closePopupByEsc, setListeners } from './components/modal.js';
 import { createCard, deleteCard, likeCard } from './components/card.js';
+import { enableValidation, clearValidation, config } from './components/validation.js';
 import './pages/index.css';
 
 const cardList = document.querySelector('.places__list');
@@ -25,6 +26,7 @@ function addUserCard(evt) {
     evt.preventDefault();
     cardList.prepend(createCard(placeLink.value, placeName.value, deleteCard, likeCard, openCard));
     placeForm.reset();
+    clearValidation(profileForm, config);
     closePopup(popupTypeNewCard);
 }
 
@@ -49,6 +51,7 @@ function openCard(source, text) {
 
 function openEditPopup() {
     fillProfileForm();
+    clearValidation(profileForm, config);
     openPopup(popupTypeEdit);
 }
 
@@ -57,12 +60,14 @@ buttonAdd.addEventListener('click', () => openPopup(popupTypeNewCard));
 profileForm.addEventListener('submit', submitProfileForm);
 placeForm.addEventListener('submit', addUserCard);
 
-addListener(popupTypeEdit);
-addListener(popupTypeImage);
-addListener(popupTypeNewCard);
+setListeners(popupTypeEdit);
+setListeners(popupTypeImage);
+setListeners(popupTypeNewCard);
 
 initialCards.forEach(function(card) {
     cardList.append(createCard(card.link, card.name, deleteCard, likeCard, openCard));
 })
 
 fillProfileForm(); // задали значения форме при загрузке страницы
+
+enableValidation(config)

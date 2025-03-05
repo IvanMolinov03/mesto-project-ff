@@ -17,7 +17,7 @@ export function closePopupByEsc(evt) {
     }
 }
 
-export function addListener(popup) {
+export function setListeners(popup) {
     const closeButton = popup.querySelector('.popup__close');
     closeButton.addEventListener("click", () => { closePopup(popup) });
     popup.addEventListener("mousedown", (evt) => {
