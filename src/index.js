@@ -1,7 +1,8 @@
 import { initialCards } from './scripts/cards.js';
 import { openPopup, closePopup, closePopupByEsc, setListeners } from './components/modal.js';
 import { createCard, deleteCard, likeCard } from './components/card.js';
-import { enableValidation, clearValidation, disableSubmitButton, config } from './components/validation.js';
+import { enableValidation, clearValidation, config as validationConfig} from './components/validation.js';
+import { getUserInfo, getInitialCards, patchProfileData, postCardApi, deleteCardApi } from './components/api.js';
 import './pages/index.css';
 
 const cardList = document.querySelector('.places__list');
@@ -19,14 +20,16 @@ const placeLink = document.forms.newPlace.link;
 
 const profileName = document.querySelector('.profile__title');
 const profileAbout = document.querySelector('.profile__description');
+const profileAvatar = document.querySelector('.profile__image');
 const editName = document.forms.editProfile.name;
 const editAbout = document.forms.editProfile.description;
 
 function addUserCard(evt) {
     evt.preventDefault();
     cardList.prepend(createCard(placeLink.value, placeName.value, deleteCard, likeCard, openCard));
+    postCardApi(placeName.value, placeLink.value);
     placeForm.reset();
-    clearValidation(placeForm, config);
+    clearValidation(placeForm, validationConfig);
     closePopup(popupTypeNewCard);
 }
 
@@ -34,6 +37,7 @@ function submitProfileForm(evt) {
     evt.preventDefault();
     profileName.textContent = editName.value;
     profileAbout.textContent = editAbout.value;
+    patchProfileData(profileName.textContent, profileAbout.textContent);
     closePopup(popupTypeEdit);
 }
 
@@ -51,7 +55,7 @@ function openCard(source, text) {
 
 function openEditPopup() {
     fillProfileForm();
-    clearValidation(profileForm, config);
+    clearValidation(profileForm, validationConfig);
     openPopup(popupTypeEdit);
 }
 
@@ -64,10 +68,17 @@ setListeners(popupTypeEdit);
 setListeners(popupTypeImage);
 setListeners(popupTypeNewCard);
 
-initialCards.forEach(function(card) {
-    cardList.append(createCard(card.link, card.name, deleteCard, likeCard, openCard));
-})
-
 fillProfileForm(); // задали значения форме при загрузке страницы
 
-enableValidation(config)
+enableValidation(validationConfig);
+
+Promise.all([getUserInfo(), getInitialCards()])
+.then(([userData, cardsData]) => {
+    profileName.textContent = userData.name;
+    profileAbout.textContent = userData.about;
+    profileAvatar.src = userData.avatar;
+    
+    cardsData.forEach((card) => {
+        cardList.append(createCard(card.link, card.name, deleteCard, likeCard, openCard, card.likes, userData._id, card.owner._id, card._id));
+    })
+})

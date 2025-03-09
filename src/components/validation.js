@@ -41,7 +41,7 @@ const hasInvalidInput = (inputList) => {
   })
 }
 
-export const disableSubmitButton = (buttonElement, config) => {
+const disableSubmitButton = (buttonElement, config) => {
   buttonElement.classList.add(`${config.inactiveButtonClass}`);
   buttonElement.setAttribute('disabled', 'true');
 }
