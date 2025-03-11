@@ -11,7 +11,11 @@ export const getUserInfo = () => {
         headers: config.headers
     })
     .then((res) => {
-        return res.json();
+        if (res.ok) {
+          return res.json();
+        } else {
+            return Promise.reject(`Ошибка: ${res.status}`);
+        }
     })
 }
 
@@ -20,7 +24,11 @@ export const getInitialCards = () => {
         headers: config.headers
     })
     .then((res) => {
-        return res.json();
+        if (res.ok) {
+          return res.json();
+        } else {
+            return Promise.reject(`Ошибка: ${res.status}`);
+        }
     })
 }
 
@@ -44,6 +52,13 @@ export const postCardApi = (name, link) => {
             link
         })
     })
+    .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+            return Promise.reject(`Ошибка: ${res.status}`);
+        }
+    })
 }
 
 export const deleteCardApi = (cardId) => {
@@ -59,7 +74,11 @@ export const likeCardApi = (cardId) => {
         headers: config.headers
     })
     .then((res) => {
-        return res.json();
+        if (res.ok) {
+          return res.json();
+        } else {
+            return Promise.reject(`Ошибка: ${res.status}`);
+        }
     })
 }
 
@@ -69,6 +88,20 @@ export const unlikeCardApi = (cardId) => {
         headers: config.headers
     })
     .then((res) => {
-        return res.json();
+        if (res.ok) {
+          return res.json();
+        } else {
+            return Promise.reject(`Ошибка: ${res.status}`);
+        }
+    })
+}
+
+export const changeAvatar = (link) => {
+    return fetch(`${config.baseUrl}/users/me/avatar`, {
+        method: 'PATCH',
+        headers: config.headers,
+        body: JSON.stringify({
+            avatar: link
+        })
     })
 }
